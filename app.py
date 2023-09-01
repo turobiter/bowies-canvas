@@ -40,8 +40,6 @@ def redirector():
     session[TOKEN_INFO]= token_info
     return redirect('/selectplaylist')
 
-
-@app.route('/selectplaylist')
 def get_token():
     token_info= session.get(TOKEN_INFO, None)
     if not token_info:
@@ -53,6 +51,8 @@ def get_token():
         token_info= sp_oauth.refresh_access_token(token_info['refresh_token'])
         session[TOKEN_INFO]= token_info
     return token_info
+@app.route('/selectplaylist')
+
 
 def selectPlaylist():
     try:
