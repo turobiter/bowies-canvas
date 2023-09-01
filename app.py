@@ -13,17 +13,7 @@ app= Flask(__name__, template_folder='templates')
 app.secret_key= appKey
 app.config['SESSION_COOKIE_NAME']= 'Tanyas Cookie'
 TOKEN_INFO= 'token_info'
-def get_token():
-    token_info= session.get(TOKEN_INFO, None)
-    if not token_info:
-        raise 'exception'
-    now = int(time.time())
-    is_expired= token_info['expires_at'] - now < 60
-    if (is_expired):
-        sp_oauth= create_spotify_oauth()
-        token_info= sp_oauth.refresh_access_token(token_info['refresh_token'])
-        session[TOKEN_INFO]= token_info
-    return token_info
+
 
 def create_spotify_oauth():
     return SpotifyOAuth(
@@ -50,7 +40,20 @@ def redirector():
     session[TOKEN_INFO]= token_info
     return redirect('/selectplaylist')
 
+
 @app.route('/selectplaylist')
+def get_token():
+    token_info= session.get(TOKEN_INFO, None)
+    if not token_info:
+        raise 'exception'
+    now = int(time.time())
+    is_expired= token_info['expires_at'] - now < 60
+    if (is_expired):
+        sp_oauth= create_spotify_oauth()
+        token_info= sp_oauth.refresh_access_token(token_info['refresh_token'])
+        session[TOKEN_INFO]= token_info
+    return token_info
+
 def selectPlaylist():
     try:
         token_info= get_token()
