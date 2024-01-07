@@ -36,7 +36,7 @@ def index():
 def redirector():
     sp_oauth= create_spotify_oauth()
     code= request.args.get('code')
-    token_info= sp_oauth.get_access_token(code)
+    token_info= sp_oauth.get_access_token(code, as_dict=True, check_cache=False)
     session[TOKEN_INFO]= token_info
     return redirect('/selectplaylist')
 
@@ -51,6 +51,7 @@ def get_token():
         token_info= sp_oauth.refresh_access_token(token_info['refresh_token'])
         session[TOKEN_INFO]= token_info
     return token_info
+
 @app.route('/selectplaylist')
 
 
